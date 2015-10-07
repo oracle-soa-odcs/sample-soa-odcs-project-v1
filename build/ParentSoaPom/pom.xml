@@ -320,6 +320,28 @@
 
     <profiles>
         <profile>
+            <id>CalculatorProfile</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>CalculatorRepository</id>
+                    <name>Remote Maven Repository for your ODCS project</name>
+                    <url>https://developer.us2.oraclecloud.com/profile/developer-oracletemplates/s/developer-oracletemplates_calculator/maven/</url>
+                    <layout>default</layout>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>CalculatorRepository</id>
+                    <name>Remote Maven Plugin Repository for your ODCS project</name>
+                    <url>https://developer.us2.oraclecloud.com/profile/developer-oracletemplates/s/developer-oracletemplates_calculator/maven/</url>
+                    <layout>default</layout>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
             <id>soaSkipDeploy</id>
             <activation>
                 <property>

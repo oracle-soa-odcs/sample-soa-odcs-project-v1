@@ -124,7 +124,9 @@ under the License.
      |
     -->
     <server>
-      <id>MavenRepositoryForODCSProject</id>
+      <!-- Note that the id here must match the id mentioned in -->
+      <!-- the repository element in build/ParentSoaPom/pom.xml -->
+      <id>CalculatorRepository</id>
       <username>Your ODCS username</username>
       <password>Your ODCS password (preferrably maven encrypted)</password>
     </server>
@@ -188,25 +190,6 @@ under the License.
      | This will make it more intuitive to understand what the set of introduced profiles is attempting
      | to accomplish, particularly when you only have a list of profile id's for debug.
      -->
-    <profile>
-      <id>BuildUsingRemoteRepositoryProfile</id>
-      <repositories>
-        <repository>
-          <id>MavenRepositoryForODCSProject</id>
-          <name>Remote Maven Repository for your ODCS project</name>
-          <url>https://url to your odcs maven repository/maven/</url>
-          <layout>default</layout>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>MavenRepositoryForODCSProject</id>
-          <name>Remote Maven Plugin Repository for your ODCS project</name>
-          <url>https://url to your odcs maven repository/maven/</url>
-          <layout>default</layout>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
 
     <!--
      | This profile example uses the JDK version to trigger activation, and provides a JDK-specific repo.
