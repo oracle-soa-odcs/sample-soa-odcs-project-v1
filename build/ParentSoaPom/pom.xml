@@ -326,17 +326,21 @@
             </activation>
             <repositories>
                 <repository>
+                    <!-- Note: you can change the name of this id, but it -->
+                    <!-- must match the server id defined in settings.xml -->
                     <id>CalculatorRepository</id>
                     <name>Remote Maven Repository for your ODCS project</name>
-                    <url>https://developer.us2.oraclecloud.com/profile/developer-oracletemplates/s/developer-oracletemplates_calculator/maven/</url>
+                    <url>YOUR ODCS MAVEN REPOSITORY URL</url>
                     <layout>default</layout>
                 </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
+                    <!-- Note: you can change the name of this id, but it -->
+                    <!-- must match the server id defined in settings.xml -->
                     <id>CalculatorRepository</id>
                     <name>Remote Maven Plugin Repository for your ODCS project</name>
-                    <url>https://developer.us2.oraclecloud.com/profile/developer-oracletemplates/s/developer-oracletemplates_calculator/maven/</url>
+                    <url>YOUR ODCS MAVEN REPOSITORY URL</url>
                     <layout>default</layout>
                 </pluginRepository>
             </pluginRepositories>
