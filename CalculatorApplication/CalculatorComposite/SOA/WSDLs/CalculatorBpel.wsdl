@@ -1,0 +1,32 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="CalculatorBpel"
+     targetNamespace="http://xmlns.oracle.com/MySampleSoaProject/CalculatorComposite/CalculatorBpel"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:client="http://xmlns.oracle.com/MySampleSoaProject/CalculatorComposite/CalculatorBpel"
+     xmlns:ns1="http://www.example.org"
+     xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+    >
+    <plnk:partnerLinkType name="CalculatorBpel">
+        <plnk:role name="CalculatorBpelProvider" portType="client:CalculatorBpel"/>
+    </plnk:partnerLinkType>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:client="http://xmlns.oracle.com/MySampleSoaProject/CalculatorComposite/CalculatorBpel"
+             xmlns:ns1="http://www.example.org" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+            <import namespace="http://www.example.org" schemaLocation="oramds:/apps/SOA/Schemas/BinaryIntOperation.xsd"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="CalculatorBpelRequestMessage">
+        <wsdl:part name="payload" element="ns1:input"/>
+    </wsdl:message>
+    <wsdl:message name="CalculatorBpelResponseMessage">
+        <wsdl:part name="payload" element="ns1:output"/>
+    </wsdl:message>
+    <wsdl:portType name="CalculatorBpel">
+        <wsdl:operation name="process">
+            <wsdl:input message="client:CalculatorBpelRequestMessage"/>
+            <wsdl:output message="client:CalculatorBpelResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,113 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Sat Sep 26 19:33:49 PDT 2015
+  Author:  me
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="CalculatorBpel"
+               targetNamespace="http://xmlns.oracle.com/MySampleSoaProject/CalculatorComposite/CalculatorBpel"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://xmlns.oracle.com/MySampleSoaProject/CalculatorComposite/CalculatorBpel"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:ui="http://xmlns.oracle.com/soa/designer"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/MySampleSoaProject/MultiplicationComposite/MultiplicationBpel"
+         xmlns:ns2="http://xmlns.oracle.com/MySampleSoaProject/AdditionComposite/AdditionBpel"
+         xmlns:ns3="http://xmlns.oracle.com/MySampleSoaProject/SubtractionComposite/SubtractionBpel"
+         xmlns:ns4="http://www.example.org">
+  <import namespace="http://www.example.org" location="oramds:/apps/SOA/Schemas/BinaryIntOperation.xsd"
+          importType="http://www.w3.org/2001/XMLSchema"/>
+  <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/MySampleSoaProject/CalculatorComposite/CalculatorBpel" location="../WSDLs/CalculatorBpel.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="calculatorbpel_client" partnerLinkType="client:CalculatorBpel" myRole="CalculatorBpelProvider"/>
+    <partnerLink name="MultiplicationComposite" partnerLinkType="ns1:MultiplicationBpel"
+                 partnerRole="MultiplicationBpelProvider"/>
+    <partnerLink name="AdditionComposite" partnerLinkType="ns2:AdditionBpel" partnerRole="AdditionBpelProvider"/>
+    <partnerLink name="SubtractionComposite" partnerLinkType="ns3:SubtractionBpel"
+                 partnerRole="SubtractionBpelProvider"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:CalculatorBpelRequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:CalculatorBpelResponseMessage"/>
+    <variable name="TempInput" element="ns4:input"/>
+    <variable name="TempOutput" element="ns4:output"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in CalculatorBpel.wsdl) -->
+    <receive name="receiveInput" partnerLink="calculatorbpel_client" portType="client:CalculatorBpel" operation="process" variable="inputVariable" createInstance="yes"/>
+    <assign name="Assign1">
+      <copy>
+        <from>$inputVariable.payload/ns4:a</from>
+        <to>$TempInput/ns4:a</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/ns4:b</from>
+        <to>$TempInput/ns4:b</to>
+      </copy>
+    </assign>
+    <invoke name="AdditionInvoke" bpelx:invokeAsDetail="no" partnerLink="AdditionComposite"
+            portType="ns2:AdditionBpel" operation="process" inputVariable="TempInput" outputVariable="TempOutput"/>
+    <assign name="Assign2">
+      <copy>
+        <from>$TempOutput/ns4:result</from>
+        <to>$TempInput/ns4:a</to>
+      </copy>
+    </assign>
+    <invoke name="MultilpcationInvoke" bpelx:invokeAsDetail="no" partnerLink="MultiplicationComposite"
+            portType="ns1:MultiplicationBpel" operation="process" inputVariable="TempInput"
+            outputVariable="TempOutput"/>
+    <assign name="Assign3">
+      <copy>
+        <from>$TempOutput/ns4:result</from>
+        <to>$TempInput/ns4:a</to>
+      </copy>
+    </assign>
+    <invoke name="SubtractionInvoke" partnerLink="SubtractionComposite"
+            portType="ns3:SubtractionBpel" operation="process" inputVariable="TempInput" outputVariable="TempOutput"
+            bpelx:invokeAsDetail="no"/>
+    <assign name="Assign4">
+      <copy>
+        <from>$TempOutput/ns4:result</from>
+        <to>$outputVariable.payload/ns4:result</to>
+      </copy>
+    </assign>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="calculatorbpel_client" portType="client:CalculatorBpel" operation="process" variable="outputVariable"/>
+  </sequence>
+</process>
