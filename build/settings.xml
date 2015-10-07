@@ -198,6 +198,14 @@ under the License.
           <layout>default</layout>
         </repository>
       </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>MavenRepositoryForODCSProject</id>
+          <name>Remote Maven Plugin Repository for your ODCS project</name>
+          <url>https://url to your odcs maven repository/maven/</url>
+          <layout>default</layout>
+        </pluginRepository>
+      </pluginRepositories>
     </profile>
 
     <!--
