@@ -318,33 +318,29 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <!-- Note: you can change the name of this id, but it -->
+            <!-- must match the server id defined in settings.xml -->
+            <id>CalculatorRepository</id>
+            <name>Remote Maven Repository for your ODCS project</name>
+            <url>YOUR ODCS MAVEN REPOSITORY URL</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <!-- Note: you can change the name of this id, but it -->
+            <!-- must match the server id defined in settings.xml -->
+            <id>CalculatorRepository</id>
+            <name>Remote Maven Plugin Repository for your ODCS project</name>
+            <url>YOUR ODCS MAVEN REPOSITORY URL</url>
+            <layout>default</layout>
+        </pluginRepository>
+    </pluginRepositories>
+
     <profiles>
-        <profile>
-            <id>CalculatorProfile</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <repositories>
-                <repository>
-                    <!-- Note: you can change the name of this id, but it -->
-                    <!-- must match the server id defined in settings.xml -->
-                    <id>CalculatorRepository</id>
-                    <name>Remote Maven Repository for your ODCS project</name>
-                    <url>YOUR ODCS MAVEN REPOSITORY URL</url>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <!-- Note: you can change the name of this id, but it -->
-                    <!-- must match the server id defined in settings.xml -->
-                    <id>CalculatorRepository</id>
-                    <name>Remote Maven Plugin Repository for your ODCS project</name>
-                    <url>YOUR ODCS MAVEN REPOSITORY URL</url>
-                    <layout>default</layout>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
         <profile>
             <id>soaSkipDeploy</id>
             <activation>
