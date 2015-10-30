@@ -24,7 +24,7 @@
         <tran:provider-id xmlns:tran="http://www.bea.com/wli/sb/transports">http</tran:provider-id>
         <tran:inbound xmlns:tran="http://www.bea.com/wli/sb/transports">false</tran:inbound>
         <tran:URI xmlns:tran="http://www.bea.com/wli/sb/transports">
-            <env:value xmlns:env="http://www.bea.com/wli/config/env">http://slc08dzb.us.oracle.com:8001/soa-infra/services/default/AdditionComposite!1.0/additionbpel_client_ep</env:value>
+            <env:value xmlns:env="http://www.bea.com/wli/config/env">http://localhost:8001/soa-infra/services/default/AdditionComposite!1.0/additionbpel_client_ep</env:value>
         </tran:URI>
         <tran:outbound-properties xmlns:tran="http://www.bea.com/wli/sb/transports">
             <tran:load-balancing-algorithm>round-robin</tran:load-balancing-algorithm>

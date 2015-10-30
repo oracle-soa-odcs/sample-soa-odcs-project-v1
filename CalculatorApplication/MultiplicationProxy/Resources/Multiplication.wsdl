@@ -1,6 +1,6 @@
 <wsdl:definitions name="MultiplicationBpel" targetNamespace="http://xmlns.oracle.com/MySampleSoaProject/MultiplicationComposite/MultiplicationBpel" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:client="http://xmlns.oracle.com/MySampleSoaProject/MultiplicationComposite/MultiplicationBpel" xmlns:ns1="http://www.example.org" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
     <wsdl:documentation>
-        <abstractWSDL>http://slc08dzb.us.oracle.com:8001/soa-infra/services/default/MultiplicationComposite!1.0/apps/SOA/WSDLs/MultiplicationBpel.wsdl</abstractWSDL>
+        <abstractWSDL>http://localhost:8001/soa-infra/services/default/MultiplicationComposite!1.0/apps/SOA/WSDLs/MultiplicationBpel.wsdl</abstractWSDL>
     </wsdl:documentation>
     <plnk:partnerLinkType name="MultiplicationBpel">
         <plnk:role name="MultiplicationBpelProvider" portType="client:MultiplicationBpel"/>
@@ -36,7 +36,7 @@
     </wsdl:binding>
     <wsdl:service name="Multiplicationbpel_client_ep">
         <wsdl:port name="MultiplicationBpel_pt" binding="client:MultiplicationBpelBinding">
-            <soap:address location="http://slc08dzb.us.oracle.com:8001/soa-infra/services/default/MultiplicationComposite!1.0*soa_1c4a7c30-f678-4298-9f9e-1d3eed039285/multiplicationbpel_client_ep"/>
+            <soap:address location="http://localhost:8001/soa-infra/services/default/MultiplicationComposite!1.0*soa_1c4a7c30-f678-4298-9f9e-1d3eed039285/multiplicationbpel_client_ep"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

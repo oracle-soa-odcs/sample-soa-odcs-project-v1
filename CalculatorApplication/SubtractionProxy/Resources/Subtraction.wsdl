@@ -1,6 +1,6 @@
 <wsdl:definitions name="SubtractionBpel" targetNamespace="http://xmlns.oracle.com/MySampleSoaProject/SubtractionComposite/SubtractionBpel" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:client="http://xmlns.oracle.com/MySampleSoaProject/SubtractionComposite/SubtractionBpel" xmlns:ns1="http://www.example.org" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
     <wsdl:documentation>
-        <abstractWSDL>http://slc08dzb.us.oracle.com:8001/soa-infra/services/default/SubtractionComposite!1.0/apps/SOA/WSDLs/SubtractionBpel.wsdl</abstractWSDL>
+        <abstractWSDL>http://localhost:8001/soa-infra/services/default/SubtractionComposite!1.0/apps/SOA/WSDLs/SubtractionBpel.wsdl</abstractWSDL>
     </wsdl:documentation>
     <plnk:partnerLinkType name="SubtractionBpel">
         <plnk:role name="SubtractionBpelProvider" portType="client:SubtractionBpel"/>
@@ -36,7 +36,7 @@
     </wsdl:binding>
     <wsdl:service name="Subtractionbpel_client_ep">
         <wsdl:port name="SubtractionBpel_pt" binding="client:SubtractionBpelBinding">
-            <soap:address location="http://slc08dzb.us.oracle.com:8001/soa-infra/services/default/SubtractionComposite!1.0*soa_1c4a7c30-f678-4298-9f9e-1d3eed039285/subtractionbpel_client_ep"/>
+            <soap:address location="http://localhost:8001/soa-infra/services/default/SubtractionComposite!1.0*soa_1c4a7c30-f678-4298-9f9e-1d3eed039285/subtractionbpel_client_ep"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
