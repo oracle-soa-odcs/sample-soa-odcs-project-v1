@@ -3,11 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.myCompany.myApplication</groupId>
-    <artifactId>ParentCompositePom</artifactId>
+    <artifactId>ParentServiceBusPom</artifactId>
     <version>${soaArtifactVersion}</version>
     <packaging>pom</packaging>
 
     <description/>
+
+    <properties>
+    </properties>
 
     <parent>
         <groupId>com.myCompany.myApplication</groupId>
@@ -17,17 +20,20 @@
     </parent>
 
     <build>
-        <finalName>sca_${composite.name}_rev${composite.revision}</finalName>
+        <finalName>sbconfig.sbar</finalName>
+
+        <directory>${project.basedir}/.data/maven</directory>
+        <sourceDirectory>${project.basedir}</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>${project.basedir}</directory>
+            </resource>
+        </resources>
 
         <plugins>
             <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>com.oracle.soa.plugin</groupId>
-                <artifactId>oracle-soa-plugin</artifactId>
+                <groupId>com.oracle.servicebus.plugin</groupId>
+                <artifactId>oracle-servicebus-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

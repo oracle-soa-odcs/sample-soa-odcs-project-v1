@@ -42,16 +42,16 @@
                 <groupId>com.oracle.soa.plugin</groupId>
                 <artifactId>oracle-soa-plugin</artifactId>
                 <executions>
-                    <!-- Deploy the metadata zip using the                 -->
-                    <!-- pre-integration-test lifecycle.  This is the same -->
-                    <!-- lifecycle that the SOA Maven deploy goal is bound -->
+                    <!-- Disable the compile, package,                     -->
+                    <!-- and test phases for this plugin                   -->
                     <execution>
-                        <id>default-deploy</id>
-                        <phase>pre-integration-test</phase>
-                        <goals><goal>deploy</goal></goals>
+                        <id>default-compile</id>
+                        <phase/>
                     </execution>
-                    <!-- Disable the test goal                             -->
-                    <!-- Metadata archives have no tests                   -->
+                    <execution>
+                        <id>default-package</id>
+                        <phase/>
+                    </execution>
                     <execution>
                         <id>default-test</id>
                         <phase/>
@@ -62,32 +62,5 @@
     </build>
 
     <profiles>
-        <!-- Unfortunately, we need to duplicate this snippet from the     -->
-        <!-- parent pom.xml because the profile cannot contain a           -->
-        <!-- pluginManagement element and the plugin tag only seems to     -->
-        <!-- affect plugins called within that pom.xml not its children    -->
-        <profile>
-            <id>soaSkipDeploy</id>
-            <activation>
-                <property>
-                    <name>soaSkipDeploy</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.oracle.soa.plugin</groupId>
-                        <artifactId>oracle-soa-plugin</artifactId>
-
-                        <executions>
-                            <execution>
-                                <id>default-deploy</id>
-                                <phase/>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 </project>

@@ -23,11 +23,15 @@
       <string v="oracle.jdeveloper.model.PathsConfiguration/ResourceBundlesContentSet"/>
    </list>
    <list n="listOfChildren">
+      <hash><url n="URL" path="../build/ParentCompositePom/ParentCompositePom.jpr"/></hash>
+      <hash><url n="URL" path="../build/ParentServiceBusPom/ParentServiceBusPom.jpr"/></hash>
+      <hash><url n="URL" path="../build/ParentSoaPom/ParentSoaPom.jpr"/></hash>
       <hash><url n="URL" path="AdditionComposite/AdditionComposite.jpr"/></hash>
       <hash><url n="URL" path="CalculatorComposite/CalculatorComposite.jpr"/></hash>
       <hash><url n="URL" path="MultiplicationComposite/MultiplicationComposite.jpr"/></hash>
       <hash><url n="URL" path="SubtractionComposite/SubtractionComposite.jpr"/></hash>
-      <hash><url n="URL" path="../build/ParentCompositePom/ParentCompositePom.jpr"/></hash>
-      <hash><url n="URL" path="../build/ParentSoaPom/ParentSoaPom.jpr"/></hash>
+      <hash><url n="URL" path="AdditionProxy/AdditionProxy.jpr"/></hash>
+      <hash><url n="URL" path="SubtractionProxy/SubtractionProxy.jpr"/></hash>
+      <hash><url n="URL" path="MultiplicationProxy/MultiplicationProxy.jpr"/></hash>
    </list>
 </jws:workspace>

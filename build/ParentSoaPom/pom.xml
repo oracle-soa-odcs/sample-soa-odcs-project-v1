@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.myCompany.myApplication</groupId>
     <artifactId>ParentSoaPom</artifactId>
     <version>${soaArtifactVersion}</version>
     <packaging>pom</packaging>
     
     <properties>
+        <!-- Begin ~ Plugin Version information                             -->
+        <!-- Only change this when you want to upgrade your plugins         -->
+        <com.oracle.soa.plugin-version>12.1.3-0-0</com.oracle.soa.plugin-version>
+        <com.oracle.servicebus.plugin-version>12.1.3-0-0</com.oracle.servicebus.plugin-version>
+        <com.google.code.maven-replacer-plugin-version>1.5.3</com.google.code.maven-replacer-plugin-version>
+        <!-- End ~ Plugin Version information                               -->
+
+
+        <!-- Begin ~  the version in a common place solves some release     -->
         <composite.name>${project.artifactId}</composite.name>
         <composite.revision>${project.version}</composite.revision>
 
@@ -27,11 +37,11 @@
         <!-- own pom.xml's.                                                 -->
         <appHome>${project.basedir}/..</appHome>
 
-        <!-- The base value here assumes that the this pom lives in a child -->
-        <!-- directory of the JDev application workspace.  If this is not   -->
-        <!-- true, then change this value to the correct value.             -->
-        <commonCompositeHome>${appHome}/../build/ParentCompositePom/</commonCompositeHome>
-
+        <!-- The base value here assumes that this pom lives in a parent    -->
+        <!-- directory of the application workspace.  If this is not true,  -->
+        <!-- then change this value to the correct value. You can change    -->
+        <!-- the property here or override it in a child pom                -->
+        <commonCompositeHome>${appHome}/../build/ParentSoaPom/</commonCompositeHome>
 
 
         <!-- Begin ~ These following properties are environment specific    -->
@@ -51,6 +61,11 @@
               </profile>
             </profiles>
         -->
+        <!-- It is also recommended to define them inside a profile to      -->
+        <!-- allow for customization based on environment or build type     -->
+        <!-- (e.g., create a "dev", "qa", "staging", "prod", and so on      -->
+        <!-- profile that would deploy the artifacts to different servers   -->
+        <!-- based on the profile chosen.                                   -->
 
         <!-- The name of the AdminServer as it is known to weblogic         -->
         <adminServerName>AdminServer</adminServerName>
@@ -61,21 +76,33 @@
 
         <!-- The name of the SOA server as it is known to weblogic          -->
         <soaServerName>soa_server1</soaServerName>
-        <!-- The hostname or IP address of the server you want to deploy to -->
+        <!-- The hostname or IP address of the SOA server to deploy to      -->
         <soaServerHost>localhost</soaServerHost>
-        <!-- The port of the server you want to deploy to                   -->
-        <soaServerPort>8001</soaServerPort>
-        <!-- The username you want to use when deploying                    -->
+        <!-- The port of the SOA server you want to deploy to                -->
+        <soaServerPort>7001</soaServerPort>
+        <!-- The username you want to use when deploying to the SOA server  -->
         <soaServerUsername>weblogic</soaServerUsername>
-        <!-- The password you want to use when deploying                    -->
+        <!-- The password you want to use when deploying to the SOA server  -->
         <soaServerPassword>weblogic1</soaServerPassword>
-        <!-- The protocol you want to use when deploying to the server      -->
+        <!-- The protocol you want to use when deploying to the SOA server  -->
         <soaServerDeployProtocol>http</soaServerDeployProtocol>
-
         <!-- The protocol you want to use when testing the composite.       -->
         <!-- This value is used in the generated jndi.properties            -->
         <!-- Normally this value is t3 or t3s                               -->
         <soaServerTestProtocol>t3</soaServerTestProtocol>
+
+        <!-- The name of the OSB server as it is known to weblogic          -->
+        <osbServerName>${soaServerName}</osbServerName>
+        <!-- The hostname or IP address of the OSB server to deploy to      -->
+        <osbServerHost>${soaServerHost}</osbServerHost>
+        <!-- The port of the OSB server you want to deploy to               -->
+        <osbServerPort>${soaServerPort}</osbServerPort>
+        <!-- The username you want to use when deploying to the OSB server  -->
+        <osbServerUsername>${soaServerUsername}</osbServerUsername>
+        <!-- The password you want to use when deploying to the OSB server  -->
+        <osbServerPassword>${soaServerPassword}</osbServerPassword>
+        <!-- The protocol you want to use when deploying to the OSB server  -->
+        <osbServerDeployProtocol>${soaServerDeployProtocol}</osbServerDeployProtocol>
 
         <!-- If you have a composite which contains a component that        -->
         <!-- depends on MDS (eg. Human Task, Business Rule) then you need   -->
@@ -103,20 +130,29 @@
         <!-- This needs to be defined if you plan to use the WLST plugin    -->
         <middlewareHome>${env.MW_HOME}</middlewareHome>
 
-        <!-- oracleHome is used by adf-config.xml. There are two options:   -->
+        <!-- oracleHome can be used by adf-config.xml.                      -->
+        <!-- There are a few options:                                       -->
         <!--  1. update the .adf/META-INF/adf-config.xml to point to the    -->
         <!--     correct location of the file based repository, i.e.        -->
-        <!--     remove the reference to ${oracle.home} in that file, or    -->
-        <!--  2. define oracleHome here and leave the adf-config.xml file   -->
-        <!--     as is.  Note that the correct value is the path to         -->
-        <!--     your SOA Quickstart or JDeveloper install directory,       -->
-        <!--     with "/soa" appended to it.                                -->
-        <oracleHome>${middlewareHome}/soa</oracleHome>
+        <!--     do not use reference to ${oracle.home} in that file, or    -->
+        <!--  2. define oracleHome here and include ${oracle.home} reference-->
+        <!--     in adf-config.xml.  Note that the correct value is the     --> 
+        <!--     path to your SOA Quickstart or JDeveloper install          -->
+        <!--     directory with "/soa" appended to it.                      -->
+        <!--  3. (default) Use the adf-config.xml replacement technique in  -->
+        <!--     these poms to dynamically point adf-config.xml to your     -->
+        <!--     design time repository.  With this approach, design time   -->
+        <!--     metadata is stored in source control and becomes the       -->
+        <!--     source of truth and deployment source.                     -->
+        <!-- Note that the above comment is only applicable to SOA;         -->
+        <!-- OSB uses oracleHome in a completely different way.             -->
+        <!-- <oracleHome>${middlewareHome}/soa</oracleHome>                 -->
 
         <!-- End ~ These following properties are environment specific      -->
 
 
         <!-- Begin ~ These derived properties likely do not need to change  -->
+        <osbServerDeployUrl>${osbServerDeployProtocol}://${osbServerHost}:${osbServerPort}</osbServerDeployUrl>
         <soaServerDeployUrl>${soaServerDeployProtocol}://${soaServerHost}:${soaServerPort}/soa-infra</soaServerDeployUrl>
         <soaServerTestUrl>${soaServerTestProtocol}://${soaServerHost}:${soaServerPort}/soa-infra</soaServerTestUrl>
         <soaJndiPropertiesRawFile>${commonCompositeHome}/jndi.properties</soaJndiPropertiesRawFile>
@@ -125,7 +161,8 @@
         <!-- End ~ These derived properties likely do not need to change    -->
 
 
-
+        <!-- Begin ~ These properties affect the plugin behavior            -->
+        <!--         They can be modified here or overridden in settings.xml-->
 
         <!-- If you are using a config plan, uncomment the following line   -->
         <!-- and update it to point to your config plan.  Child projects    -->
@@ -134,14 +171,7 @@
         <!-- N.B., Unfortunately, the plugin does not ignore empty strings  -->
         <!-- So, if you need to use a config plan, you must uncomment       -->
         <!-- <configplan> below                                             -->
-        <composite.deploy.configplan></composite.deploy.configplan>
-        <!--<composite.deploy.configplan>${composite.compile.sourceDir}/configplan.xml</composite.deploy.configplan>-->
-
-        <!-- <configplan> should be defined in the plugin section, but      -->
-        <!-- unfortunately the plugin does not ignore empty strings, so     -->
-        <!-- if you are using a config plan, uncomment this line below      -->
-        <!-- <configplan>${composite.deploy.configplan}</configplan> -->
-
+        <composite.deploy.configplan>${composite.compile.sourceDir}/configplan.xml</composite.deploy.configplan>
         <composite.deploy.forceDefault>true</composite.deploy.forceDefault>
         <composite.deploy.keepInstancesOnRedeploy>false</composite.deploy.keepInstancesOnRedeploy>
         <composite.deploy.overwrite>true</composite.deploy.overwrite>
@@ -149,20 +179,20 @@
         <composite.deploy.regenerateRulebase>false</composite.deploy.regenerateRulebase>
         <composite.deploy.sarArchive>${project.build.directory}/${project.build.finalName}.jar</composite.deploy.sarArchive>
 
+        <composite.undeploy.name>${composite.name}</composite.undeploy.name>
+        <composite.undeploy.revision>${composite.revision}</composite.undeploy.revision>
 
+        <!-- These parameters are used by the compile goal                  -->
         <!-- Value must be 1 - 9                                            -->
         <composite.compile.displayLevel>9</composite.compile.displayLevel>
         <composite.compile.sourceDir>${project.basedir}/SOA</composite.compile.sourceDir>
         <composite.compile.targetDir>${project.build.directory}</composite.compile.targetDir>
         <composite.compile.compositeXmlFile>${composite.compile.sourceDir}/composite.xml</composite.compile.compositeXmlFile>
-
         <!-- Setting this value to true currently results in an exception!  -->
         <composite.compile.reportErrors>false</composite.compile.reportErrors>
 
-
-
-
-        <!-- These parameters are used by the test goal -->
+        <!-- These parameters are used by the test goal                     -->
+        <composite.test.name>${composite.name}</composite.test.name>
         <composite.test.jndiPropertiesFile>${soaJndiPropertiesReplacedFile}</composite.test.jndiPropertiesFile>
         <composite.test.format>junit</composite.test.format>
         <composite.test.resultsFile>${project.build.testOutputDirectory}</composite.test.resultsFile>
@@ -171,8 +201,7 @@
         <scac.ant.buildfile>${env.MW_HOME}/soa/bin/ant-sca-compile.xml</scac.ant.buildfile>
         <sca.ant.testfile>${env.MW_HOME}/soa/bin/ant-sca-test.xml</sca.ant.testfile>
         -->
-
-
+        <!-- End ~ These properties affect the plugin behavior              -->
     </properties>
     <build>
         <pluginManagement>
@@ -180,9 +209,9 @@
                 <plugin>
                     <groupId>com.oracle.soa.plugin</groupId>
                     <artifactId>oracle-soa-plugin</artifactId>
-                    <version>12.1.3-0-0</version>
+                    <version>${com.oracle.soa.plugin-version}</version>
 
-                    <!-- disable deployment by default -->
+                    <!-- allow deployment to be disabled via profiles       -->
                     <executions>
                         <execution>
                             <id>default-deploy</id>
@@ -197,8 +226,6 @@
                     </executions> 
 
                     <configuration>
-                        <goalPrefix>soa</goalPrefix>
-
                         <!-- Begin ~ These properties are shared by the (un)deploy goals    --> 
                         <serverUrl>${soaServerDeployUrl}</serverUrl>
                         <user>${soaServerUsername}</user>
@@ -215,8 +242,8 @@
                         <!-- End ~ These properties are used by the deploy goal             --> 
 
                         <!-- Begin ~ These properties are used by the undeploy goal         --> 
-                        <compositeName>${composite.name}</compositeName>
-                        <revision>${composite.revision}</revision>
+                        <compositeName>${composite.undeploy.name}</compositeName>
+                        <revision>${composite.undeploy.revision}</revision>
                         <!-- End ~ These properties are used by the undeploy goal           --> 
 
                         <!-- Begin ~ These properties are used by the compile/package goals --> 
@@ -232,10 +259,14 @@
 
                         <!-- Begin ~ These properties are used by the test goal             --> 
                         <jndiPropertiesInput>${composite.test.jndiPropertiesFile}</jndiPropertiesInput>
-                        <input>${composite.name}</input>
+                        <input>${composite.test.name}</input>
                         <format>${composite.test.format}</format>
                         <result>${composite.test.resultsFile}</result>
                         <!-- End ~ These properties are used by the test goal               --> 
+
+                        <!-- Unfortunately, the plugin does not ignore empty strings, so    -->
+                        <!-- if you are using a config plan, uncomment this line below      -->
+                        <!-- <configplan>${composite.deploy.configplan}</configplan>        -->
                     </configuration>
 
                     <!-- extensions=true is needed to use the custom sar packaging type -->
@@ -243,9 +274,91 @@
                 </plugin>
 
                 <plugin>
+                    <groupId>com.oracle.servicebus.plugin</groupId>
+                    <artifactId>oracle-servicebus-plugin</artifactId>
+                    <version>${com.oracle.servicebus.plugin-version}</version>
+
+                    <!-- allow deployment to be disabled via profiles       -->
+                    <executions>
+                        <execution>
+                            <id>default-deploy</id>
+                            <phase>pre-integration-test</phase>
+                            <goals><goal>deploy</goal></goals>
+                        </execution>
+                    </executions>
+
+                    <configuration>
+                        <oracleHome>${middlewareHome}</oracleHome>
+                        <oracleServerUrl>${osbServerDeployUrl}</oracleServerUrl>
+                        <oracleUsername>${osbServerUsername}</oracleUsername>
+                        <oraclePassword>${osbServerPassword}</oraclePassword>
+                    </configuration>
+
+                    <!-- extensions=true is needed to use the custom sbar packaging type -->
+                    <extensions>true</extensions>
+                </plugin>
+
+                <plugin>
                     <groupId>com.google.code.maven-replacer-plugin</groupId>
                     <artifactId>replacer</artifactId>
-                    <version>1.5.3</version>
+                    <version>${com.google.code.maven-replacer-plugin-version}</version>
+
+                    <executions>
+                        <execution>
+                            <id>replaceJndiProperties</id>
+                            <phase>process-resources</phase>
+                            <goals><goal>replace</goal></goals>
+                            <configuration>
+                                <file>${soaJndiPropertiesRawFile}</file>
+                                <outputFile>${soaJndiPropertiesReplacedFile}</outputFile>
+                                <replacements>
+                                    <replacement>
+                                        <token>\$\{soaServerTestUrl\}</token>
+                                        <value>${soaServerTestUrl}</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>\$\{soaServerUsername\}</token>
+                                        <value>${soaServerUsername}</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>\$\{soaServerPassword\}</token>
+                                        <value>${soaServerPassword}</value>
+                                    </replacement>
+                                </replacements>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>replaceAdfConfigXml</id>
+                            <phase>generate-resources</phase>
+                            <goals><goal>replace</goal></goals>
+                            <configuration>
+                                <file>${soaAdfConfigXmlRawFile}</file>
+                                <outputFile>${soaAdfConfigXmlReplacedFile}</outputFile>
+                                <replacements>
+                                    <replacement>
+                                        <token>\$\{soaMdsFileRepositoryHome\}</token>
+                                        <value>${soaMdsFileRepositoryHome}</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>\$\{soaMdsDBRepositoryJdbcUsername\}</token>
+                                        <value>${soaMdsDBRepositoryJdbcUsername}</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>\$\{soaMdsDBRepositoryJdbcPassword\}</token>
+                                        <value>${soaMdsDBRepositoryJdbcPassword}</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>\$\{soaMdsDBRepositoryJdbcUrl\}</token>
+                                        <value>${soaMdsDBRepositoryJdbcUrl}</value>
+                                    </replacement>
+                                    <replacement>
+                                        <token>\$\{soaMdsDBRepositoryPartition\}</token>
+                                        <value>${soaMdsDBRepositoryPartition}</value>
+                                    </replacement>
+                                </replacements>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -253,27 +366,89 @@
 
     <repositories>
         <repository>
-            <!-- Note: you can change the name of this id, but it -->
-            <!-- must match the server id defined in settings.xml -->
             <id>CalculatorRepository</id>
             <name>Remote Maven Repository for your ODCS project</name>
-            <url>YOUR ODCS MAVEN REPOSITORY URL</url>
+            <url>YOUR_MAVEN_REPOSITORY_URL</url>
             <layout>default</layout>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <!-- Note: you can change the name of this id, but it -->
-            <!-- must match the server id defined in settings.xml -->
             <id>CalculatorRepository</id>
             <name>Remote Maven Plugin Repository for your ODCS project</name>
-            <url>YOUR ODCS MAVEN REPOSITORY URL</url>
+            <url>YOUR_MAVEN_REPOSITORY_URL</url>
             <layout>default</layout>
         </pluginRepository>
     </pluginRepositories>
 
     <profiles>
+        <!-- If each developer has their own test box, then they should     -->
+        <!-- create a profile in their settings.xml that overrides these    -->
+        <!-- properties and then enable the profile by default.             -->
+        <profile>
+            <id>soaDeployEnv_DEV</id>
+            <activation>
+                <property>
+                    <name>soaDeployEnv</name>
+                    <value>DEV</value>
+                </property>
+            </activation>
+            <properties>
+                <soaServerHost>somehost1</soaServerHost>
+                <soaServerPort>7001</soaServerPort>
+                <soaServerUsername>some username</soaServerUsername>
+                <soaServerPassword>some password</soaServerPassword>
+
+                <osbServerHost>somehost2</osbServerHost>
+                <osbServerPort>7001</osbServerPort>
+                <osbServerUsername>some username</osbServerUsername>
+                <osbServerPassword>some password</osbServerPassword>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>soaDeployEnv_TEST</id>
+            <activation>
+                <property>
+                    <name>soaDeployEnv</name>
+                    <value>TEST</value>
+                </property>
+            </activation>
+            <properties>
+                <soaServerHost>somehost1</soaServerHost>
+                <soaServerPort>7001</soaServerPort>
+                <soaServerUsername>some username</soaServerUsername>
+                <soaServerPassword>some password</soaServerPassword>
+
+                <osbServerHost>somehost2</osbServerHost>
+                <osbServerPort>7001</osbServerPort>
+                <osbServerUsername>some username</osbServerUsername>
+                <osbServerPassword>some password</osbServerPassword>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>soaDeployEnv_PROD</id>
+            <activation>
+                <property>
+                    <name>soaDeployEnv</name>
+                    <value>PROD</value>
+                </property>
+            </activation>
+            <properties>
+                <soaServerHost>somehost1</soaServerHost>
+                <soaServerPort>7001</soaServerPort>
+                <soaServerUsername>some username</soaServerUsername>
+                <soaServerPassword>some password</soaServerPassword>
+
+                <osbServerHost>somehost2</osbServerHost>
+                <osbServerPort>7001</osbServerPort>
+                <osbServerUsername>some username</osbServerUsername>
+                <osbServerPassword>some password</osbServerPassword>
+            </properties>
+        </profile>
+
         <profile>
             <id>soaSkipDeploy</id>
             <activation>
@@ -294,6 +469,17 @@
                             </execution>
                             <execution>
                                 <id>default-test</id>
+                                <phase/>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.oracle.servicebus.plugin</groupId>
+                        <artifactId>oracle-servicebus-plugin</artifactId>
+
+                        <executions>
+                            <execution>
+                                <id>default-deploy</id>
                                 <phase/>
                             </execution>
                         </executions>

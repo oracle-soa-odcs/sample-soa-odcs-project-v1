@@ -1,0 +1,42 @@
+<wsdl:definitions name="AdditionBpel" targetNamespace="http://xmlns.oracle.com/MySampleSoaProject/AdditionComposite/AdditionBpel" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:client="http://xmlns.oracle.com/MySampleSoaProject/AdditionComposite/AdditionBpel" xmlns:ns1="http://www.example.org" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <wsdl:documentation>
+        <abstractWSDL>http://slc08dzb.us.oracle.com:8001/soa-infra/services/default/AdditionComposite!1.0/apps/SOA/WSDLs/AdditionBpel.wsdl</abstractWSDL>
+    </wsdl:documentation>
+    <plnk:partnerLinkType name="AdditionBpel">
+        <plnk:role name="AdditionBpelProvider" portType="client:AdditionBpel"/>
+    </plnk:partnerLinkType>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.example.org" schemaLocation="Addition.xsd"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="AdditionBpelRequestMessage">
+        <wsdl:part name="payload" element="ns1:input"/>
+    </wsdl:message>
+    <wsdl:message name="AdditionBpelResponseMessage">
+        <wsdl:part name="payload" element="ns1:output"/>
+    </wsdl:message>
+    <wsdl:portType name="AdditionBpel">
+        <wsdl:operation name="process">
+            <wsdl:input message="client:AdditionBpelRequestMessage"/>
+            <wsdl:output message="client:AdditionBpelResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="AdditionBpelBinding" type="client:AdditionBpel">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="process">
+            <soap:operation style="document" soapAction="process"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="additionbpel_client_ep">
+        <wsdl:port name="AdditionBpel_pt" binding="client:AdditionBpelBinding">
+            <soap:address location="http://slc08dzb.us.oracle.com:8001/soa-infra/services/default/AdditionComposite!1.0*soa_1c4a7c30-f678-4298-9f9e-1d3eed039285/additionbpel_client_ep"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

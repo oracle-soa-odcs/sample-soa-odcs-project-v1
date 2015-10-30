@@ -9,8 +9,11 @@
     <!-- Add project modules -->
     <module>SharedCompositeMetadata</module>
     <module>AdditionComposite</module>
-    <module>MultiplicationComposite</module>
     <module>SubtractionComposite</module>
+    <module>MultiplicationComposite</module>
     <module>CalculatorComposite</module>
+    <module>AdditionProxy</module>
+    <module>SubtractionProxy</module>
+    <module>MultiplicationProxy</module>
   </modules>
 </project>
