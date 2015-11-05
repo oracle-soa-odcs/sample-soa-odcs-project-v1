@@ -88,8 +88,10 @@
         <soaServerDeployProtocol>http</soaServerDeployProtocol>
         <!-- The protocol you want to use when testing the composite.       -->
         <!-- This value is used in the generated jndi.properties            -->
-        <!-- Normally this value is t3 or t3s                               -->
-        <soaServerTestProtocol>t3</soaServerTestProtocol>
+        <!-- This value can be t3, t3s, http, https                         -->
+        <soaServerTestProtocol>${soaServerDeployProtocol}</soaServerTestProtocol>
+        <!-- The port you want to use when testing the composite.           -->
+        <soaServerTestPort>${soaServerPort}</soaServerTestPort>
 
         <!-- The name of the OSB server as it is known to weblogic          -->
         <osbServerName>${soaServerName}</osbServerName>
@@ -154,7 +156,7 @@
         <!-- Begin ~ These derived properties likely do not need to change  -->
         <osbServerDeployUrl>${osbServerDeployProtocol}://${osbServerHost}:${osbServerPort}</osbServerDeployUrl>
         <soaServerDeployUrl>${soaServerDeployProtocol}://${soaServerHost}:${soaServerPort}/soa-infra</soaServerDeployUrl>
-        <soaServerTestUrl>${soaServerTestProtocol}://${soaServerHost}:${soaServerPort}/soa-infra</soaServerTestUrl>
+        <soaServerTestUrl>${soaServerTestProtocol}://${soaServerHost}:${soaServerTestPort}/soa-infra</soaServerTestUrl>
         <soaJndiPropertiesRawFile>${commonCompositeHome}/jndi.properties</soaJndiPropertiesRawFile>
         <soaJndiPropertiesReplacedFile>${project.build.testOutputDirectory}/jndi.properties</soaJndiPropertiesReplacedFile>
         <soaAdfConfigXmlReplacedFile>${appHome}/.adf/META-INF/adf-config.xml</soaAdfConfigXmlReplacedFile>
